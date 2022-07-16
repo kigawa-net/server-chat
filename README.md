@@ -2,11 +2,12 @@
 
 ## About
 
-*
+* lunaChatのデフォルトチャンネルをサーバーごとに設定するbungeeCordプラグイン
 
 ## Requirement
 
 * java
+* bungeeCord
 
 ## Author
 
@@ -19,7 +20,7 @@
 
 ### Example: 9.1
 
-* **9.1dev**
+* **9.1**
     * version
     * **9**: major
     * **1**: miner
