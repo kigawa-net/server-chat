@@ -8,6 +8,7 @@
 
 * java
 * bungeeCord
+* [lunaChat](https://github.com/ucchyocean/LunaChat)
 
 ## Author
 
