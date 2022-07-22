@@ -20,11 +20,12 @@ public class ServerChatConfig
     {
         this.serverChat = serverChat;
         try {
-            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(this.serverChat.getDataFolder(), "config.yml"));
+            serverChat.getDataFolder().mkdirs();
+            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(serverChat.getDataFolder(), "config.yml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        for (var server : this.serverChat.getProxy().getServers().keySet()) {
+        for (var server : serverChat.getProxy().getServers().keySet()) {
             var channel = configuration.getString(server);
             if (channel.equals("")) {
                 channel = server;
