@@ -22,13 +22,19 @@ public class ServerChatListener implements Listener
     public void onConnect(ServerConnectEvent event)
     {
         var api = plugin.getLunaChatAPI();
-        var player = ChannelMember.getChannelMember(event.getPlayer());
-        var currentServerChannel = api.getChannel(serverChatConfig.getChannel(event.getPlayer().getServer().getInfo().getName()));
+        var member = ChannelMember.getChannelMember(event.getPlayer());
         var targetServerChannel = api.getChannel(serverChatConfig.getChannel(event.getTarget().getName()));
 
-        if (api.getChannelsByPlayer(player.getName()).contains(currentServerChannel)) {
-            currentServerChannel.removeMember(player);
-            targetServerChannel.addMember(player);
+        var currentServer = event.getPlayer().getServer();
+        if (currentServer == null) {
+            targetServerChannel.addMember(member);
+            return;
+        }
+
+        var currentServerChannel = api.getChannel(serverChatConfig.getChannel(currentServer.getInfo().getName()));
+        if (api.getChannelsByPlayer(member.getName()).contains(currentServerChannel)) {
+            currentServerChannel.removeMember(member);
+            targetServerChannel.addMember(member);
         }
     }
 }

@@ -2,5 +2,5 @@ name: server-chat
 main: net.kigawa.serverchat.ServerChat
 version: 1.0
 author: kigawa
-depend:
+depends:
   - LunaChat

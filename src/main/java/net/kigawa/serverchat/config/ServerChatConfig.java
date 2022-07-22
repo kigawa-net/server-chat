@@ -13,42 +13,57 @@ import java.util.Map;
 public class ServerChatConfig
 {
     private final ServerChat serverChat;
-    private final Configuration configuration;
+    private Configuration configuration;
+    private File config;
     private final Map<String, String> channels = new HashMap<>();
 
     public ServerChatConfig(ServerChat serverChat)
     {
         this.serverChat = serverChat;
-        try {
-            serverChat.getDataFolder().mkdirs();
-            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(serverChat.getDataFolder(), "config.yml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        for (var server : serverChat.getProxy().getServers().keySet()) {
-            var channel = configuration.getString(server);
-            if (channel.equals("")) {
-                channel = server;
-                configuration.set(server, channel);
-            }
+    }
 
-            channels.put(server, channel);
+    public void onEnable() throws IOException
+    {
+        serverChat.getDataFolder().mkdirs();
+        config = new File(serverChat.getDataFolder(), "config.yml");
+        config.createNewFile();
+
+        loadConfig();
+    }
+
+    public void loadConfig() throws IOException
+    {
+        configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(config);
+
+        for (var server : serverChat.getProxy().getServers().keySet()) {
+            if (!configuration.contains(server)) {
+                configuration.set(server, server);
+            }
         }
+        saveConfig();
+    }
+
+    public void saveConfig() throws IOException
+    {
+        ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, config);
     }
 
     public String getChannel(String serverName)
     {
-        return channels.get(serverName);
+        return configuration.getString(serverName);
     }
 
     public void setChannel(String serverName, String channel)
     {
-        channels.put(serverName, channel);
         configuration.set(serverName, channel);
     }
 
     public Map<String, String> getChannels()
     {
-        return new HashMap<>(channels);
+        var map = new HashMap<String, String>();
+        for (var key : configuration.getKeys()) {
+            map.put(key, getChannel(key));
+        }
+        return map;
     }
 }

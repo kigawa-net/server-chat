@@ -7,6 +7,8 @@ import net.kigawa.serverchat.config.ServerChatConfig;
 import net.kigawa.serverchat.listener.ServerChatListener;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.io.IOException;
+
 public class ServerChat extends Plugin
 {
     private static ServerChat serverChat;
@@ -37,6 +39,12 @@ public class ServerChat extends Plugin
 
         getProxy().getPluginManager().registerListener(this, serverChatListener);
         getProxy().getPluginManager().registerCommand(this, serverChatCommand);
+
+        try {
+            serverChatConfig.onEnable();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         for (var channel : serverChatConfig.getChannels().values()) {
             if (lunaChatAPI.isExistChannel(channel)) continue;
