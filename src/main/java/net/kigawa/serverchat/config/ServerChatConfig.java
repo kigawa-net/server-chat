@@ -12,18 +12,19 @@ import java.util.Map;
 
 public class ServerChatConfig
 {
-    private final ServerChat serverChat = ServerChat.getServerChat();
+    private final ServerChat serverChat;
     private final Configuration configuration;
     private final Map<String, String> channels = new HashMap<>();
 
-    public ServerChatConfig()
+    public ServerChatConfig(ServerChat serverChat)
     {
+        this.serverChat = serverChat;
         try {
-            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(serverChat.getDataFolder(), "config.yml"));
+            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(this.serverChat.getDataFolder(), "config.yml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        for (var server : serverChat.getProxy().getServers().keySet()) {
+        for (var server : this.serverChat.getProxy().getServers().keySet()) {
             var channel = configuration.getString(server);
             if (channel.equals("")) {
                 channel = server;

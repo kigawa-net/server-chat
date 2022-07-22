@@ -11,11 +11,12 @@ import java.util.LinkedList;
 
 public class ServerChatCommand extends Command
 {
-    private final ServerChat serverChat = ServerChat.getServerChat();
+    private final ServerChat serverChat;
 
-    public ServerChatCommand()
+    public ServerChatCommand(ServerChat serverChat)
     {
         super("serverchat");
+        this.serverChat = serverChat;
     }
 
     @Override
