@@ -45,4 +45,9 @@ public class ServerChatConfig
         channels.put(serverName, channel);
         configuration.set(serverName, channel);
     }
+
+    public Map<String, String> getChannels()
+    {
+        return new HashMap<>(channels);
+    }
 }

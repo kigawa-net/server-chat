@@ -38,7 +38,10 @@ public class ServerChat extends Plugin
         getProxy().getPluginManager().registerListener(this, serverChatListener);
         getProxy().getPluginManager().registerCommand(this, serverChatCommand);
 
-
+        for (var channel : serverChatConfig.getChannels().values()) {
+            if (lunaChatAPI.isExistChannel(channel)) continue;
+            lunaChatAPI.createChannel(channel);
+        }
     }
 
     public LunaChatAPI getLunaChatAPI()
