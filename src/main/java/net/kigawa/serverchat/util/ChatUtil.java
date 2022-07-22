@@ -6,7 +6,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public class ChatUtil
 {
-    public static BaseComponent[] createErrorMessage(String message)
+    public static BaseComponent[] createErrorMessageComponents(String message)
     {
         return new ComponentBuilder("Error: " + message).color(ChatColor.RED).create();
     }

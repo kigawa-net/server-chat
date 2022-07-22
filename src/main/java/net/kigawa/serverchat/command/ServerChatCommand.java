@@ -3,7 +3,6 @@ package net.kigawa.serverchat.command;
 import net.kigawa.serverchat.ServerChat;
 import net.kigawa.serverchat.util.ChatUtil;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Collections;
@@ -26,30 +25,13 @@ public class ServerChatCommand extends Command
         Collections.addAll(args, strings);
 
         if (args.isEmpty()) {
-            commandSender.sendMessage(ChatUtil.createErrorMessage(
+            commandSender.sendMessage(ChatUtil.createErrorMessageComponents(
                     "use /" + getName() + " <sub command>"
             ));
         }
 
-        commandSender.sendMessage(new ComponentBuilder(switch (args.get(0)) {
-            case "list" -> list();
-            case "set" -> set();
-            case "get" -> get();
-        }).create());
-    }
-
-    private String list()
-    {
-        return "";
-    }
-
-    private String set()
-    {
-        return "";
-    }
-
-    private String get()
-    {
-        return "";
+        commandSender.sendMessage(switch (args.get(0)) {
+            default -> ChatUtil.createErrorMessageComponents(args.get(0) + " is not exits");
+        });
     }
 }
