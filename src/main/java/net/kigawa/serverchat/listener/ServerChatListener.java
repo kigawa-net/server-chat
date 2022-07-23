@@ -3,7 +3,8 @@ package net.kigawa.serverchat.listener;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import net.kigawa.serverchat.ServerChat;
 import net.kigawa.serverchat.config.ServerChatConfig;
-import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.md_5.bungee.api.event.ServerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -19,22 +20,25 @@ public class ServerChatListener implements Listener
     }
 
     @EventHandler
-    public void onConnect(ServerConnectEvent event)
+    public void onConnect(ServerConnectedEvent event)
     {
         var api = plugin.getLunaChatAPI();
         var member = ChannelMember.getChannelMember(event.getPlayer());
-        var targetServerChannel = api.getChannel(serverChatConfig.getChannel(event.getTarget().getName()));
+        var targetServerChannel = api.getChannel(
+                serverChatConfig.getChannel(event.getServer().getInfo().getName())
+        );
 
-        var currentServer = event.getPlayer().getServer();
-        if (currentServer == null) {
-            targetServerChannel.addMember(member);
-            return;
-        }
+        targetServerChannel.addMember(member);
+    }
 
-        var currentServerChannel = api.getChannel(serverChatConfig.getChannel(currentServer.getInfo().getName()));
-        if (api.getChannelsByPlayer(member.getName()).contains(currentServerChannel)) {
-            currentServerChannel.removeMember(member);
-            targetServerChannel.addMember(member);
-        }
+    @EventHandler
+    public void onLeave(ServerDisconnectEvent event)
+    {
+        var api = plugin.getLunaChatAPI();
+        var currentServer = event.getTarget();
+        var member = ChannelMember.getChannelMember(event.getPlayer());
+        var currentServerChannel = api.getChannel(serverChatConfig.getChannel(currentServer.getName()));
+
+        currentServerChannel.removeMember(member);
     }
 }
