@@ -24,11 +24,12 @@ public class ServerChatListener implements Listener
     {
         var api = plugin.getLunaChatAPI();
         var member = ChannelMember.getChannelMember(event.getPlayer());
-        var targetServerChannel = api.getChannel(
+        var channel = api.getChannel(
                 serverChatConfig.getChannel(event.getServer().getInfo().getName())
         );
 
-        targetServerChannel.addMember(member);
+        channel.addMember(member);
+        api.setDefaultChannel(member.getName(), channel.getName());
     }
 
     @EventHandler
@@ -37,8 +38,8 @@ public class ServerChatListener implements Listener
         var api = plugin.getLunaChatAPI();
         var currentServer = event.getTarget();
         var member = ChannelMember.getChannelMember(event.getPlayer());
-        var currentServerChannel = api.getChannel(serverChatConfig.getChannel(currentServer.getName()));
+        var channel = api.getChannel(serverChatConfig.getChannel(currentServer.getName()));
 
-        currentServerChannel.removeMember(member);
+        channel.removeMember(member);
     }
 }
